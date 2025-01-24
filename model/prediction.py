@@ -19,7 +19,7 @@ class FaceRecognition:
                 name=collection_name,
                 metadata={"hnsw:space": "cosine"}
             )
-        except chromadb.db.base.UniqueConstraintError:
+        except Exception:
             return self._chroma_client.get_collection(name=collection_name)
 
     @staticmethod
