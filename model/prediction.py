@@ -71,7 +71,7 @@ class FaceRecognition:
         else:
             print("Falha ao processar a imagem para adicionar ao banco de dados.")
 
-    def find_in_db(self, image_path: str, threshold: float = 0.5) -> Optional[str]:
+    def find_in_db(self, image_path: str, threshold: float = 0.65) -> Optional[str]:
         face, embedding = self._process_image(image_path)
         if face is None or embedding is None:
             print("Falha ao processar a imagem para comparação.")
