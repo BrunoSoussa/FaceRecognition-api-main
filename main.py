@@ -46,45 +46,17 @@ def find_face():
     image_file.save(temp_image_path)
 
     try:
-        # Obter embedding da imagem fornecida
-        image = cv2.imread(temp_image_path)
-        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        face = face_recognition._extract_face(rgb_image)
-
-        if face is None:
-            os.remove(temp_image_path)
-            return jsonify({"error": "Nenhum rosto detectado na imagem"}), 400
-
-        embedding = face_recognition._get_embedding(face)
-
-        # Consultar o banco de dados pelo embedding
-        query_result = face_recognition._collection.query(
-            query_embeddings=[embedding.tolist()],
-            n_results=1
-        )
-
+        # Procurar rosto semelhante no banco de dados
+        best_match = face_recognition.find_in_db(temp_image_path, threshold=0.65)
         os.remove(temp_image_path)
 
-        if query_result["distances"] and query_result["distances"][0][0] <= 0.6:
-            similarity = 1 - query_result["distances"][0][0]
-            best_match = query_result["metadatas"][0]["name"]
-
-            return jsonify({
-                "message": "Rosto encontrado",
-                "identifier": best_match,
-                "similarity": similarity
-            }), 200
+        if best_match:
+            return jsonify({"message": "Rosto encontrado", "identifier": best_match}), 200
         else:
-            return jsonify({
-                "message": "Rosto não encontrado",
-                "identifier": "Desconhecido",
-                "similarity": 0.0
-            }), 404
-
+            return jsonify({"message": "Rosto não encontrado", "identifier": "Desconhecido"}), 404
     except Exception as e:
         os.remove(temp_image_path)
         return jsonify({"error": str(e)}), 500
-
     
 @app.route('/add_face_from_video', methods=['POST'])
 def add_face_from_video():
