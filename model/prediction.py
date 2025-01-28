@@ -82,7 +82,7 @@ class FaceRecognition:
             n_results=1
         )
         similarity = 1 - results["distances"][0][0]
-        if results["distances"] and similarity <= threshold:
+        if results["distances"] and similarity >= threshold:
             best_match = results["metadatas"][0][0]["name"]
             print(f"Melhor correspondência: {best_match} com similaridade {similarity}")
             return best_match
