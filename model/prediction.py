@@ -81,10 +81,10 @@ class FaceRecognition:
             query_embeddings=[embedding.tolist()],
             n_results=1
         )
-
-        if results["distances"] and results["distances"][0][0] <= threshold:
+        similarity = 1 - results["distances"][0][0]
+        if results["distances"] and similarity <= threshold:
             best_match = results["metadatas"][0][0]["name"]
-            print(f"Melhor correspondência: {best_match} com similaridade {1 - results['distances'][0][0]}")
+            print(f"Melhor correspondência: {best_match} com similaridade {similarity}")
             return best_match
         else:
             print("Nenhuma correspondência encontrada.")
