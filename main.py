@@ -47,7 +47,7 @@ def find_face():
 
     try:
         # Procurar rosto semelhante no banco de dados
-        best_match = face_recognition.find_in_db(temp_image_path, threshold=0.65)
+        best_match = face_recognition.find_in_db(temp_image_path, threshold=0.7)
         os.remove(temp_image_path)
 
         if best_match:
